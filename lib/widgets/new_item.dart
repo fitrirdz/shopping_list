@@ -21,14 +21,14 @@ class _NewItemState extends State<NewItem> {
   void _saveItem() {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      Navigator.of(context).pop({
+      Navigator.of(context).pop(
         GroceryItem(
           id: DateTime.now().toString(),
           name: _enteredName,
           quantity: _enteredQuantity,
           category: _selectedCategory,
-        )
-      });
+        ),
+      );
     }
   }
 
@@ -87,10 +87,11 @@ class _NewItemState extends State<NewItem> {
                   const SizedBox(width: 8),
                   Expanded(
                     child: DropdownButtonFormField(
+                      value: _selectedCategory,
                       items: [
                         for (final category in categories.entries)
                           DropdownMenuItem(
-                            value: _selectedCategory,
+                            value: category.value,
                             child: Row(
                               children: [
                                 Container(
