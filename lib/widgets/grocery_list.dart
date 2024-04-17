@@ -74,15 +74,26 @@ class _GroceryListState extends State<GroceryList> {
     });
   }
 
-  void _removeItem(GroceryItem item) {
-    final url = Uri.https('flutter-prep-f3de1-default-rtdb.firebaseio.com',
-        'shopping-list/${item.id}.json');
-
-    http.delete(url);
-
+  void _removeItem(GroceryItem item) async {
+    final index = _groceryItems.indexOf(item);
     setState(() {
       _groceryItems.remove(item);
     });
+    final url = Uri.https('flutter-prep-f3de1-default-rtdb.firebaseio.com',
+        'shopping-list/${item.id}.json');
+
+    final response = await http.delete(url);
+
+    if (response.statusCode >= 400) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Failed to remove item. Please try again later')),
+      );
+
+      setState(() {
+        _groceryItems.insert(index, item);
+      });
+    }
   }
 
   @override
